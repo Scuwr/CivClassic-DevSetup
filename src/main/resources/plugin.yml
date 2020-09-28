@@ -1,0 +1,26 @@
+# READ MORE: https://www.spigotmc.org/wiki/plugin-yml/
+
+name: ${project.name}
+
+version: ${project.version}
+
+# This represents the absolute path of your Plugin class. By default it's a combination of your project's groupId,
+# artifactId, and name. The default below would resolve to: io.protonull.template.TemplatePlugin
+# While it's not necessary for your class paths to follow your artifactId and groupId, it's highly recommended.
+main: ${project.groupId}.${project.artifactId}.${project.name}Plugin
+
+# This indicates to the server what version your plugin is specifically built for. You are allowed to remove this or
+# have a value disparate to your server's version and the server will attempt to compensate and enable backwards
+# compatibility, however it's always recommended to stay up to date.
+# Allowed API versions: 1.13, 1.14, 1.15
+api-version: 1.14
+
+# List of hard dependencies (other plugins) that your plugin would fail without.
+depend: [CivModCore]
+
+# List of soft dependencies (other plugins) that your plugin can take advantage of if they're present.
+softdepend: []
+
+# The list of authors who have made notable contributions to this plugin. You can /also/ use "author" if you wish to
+# honour the person who came up with the idea originally or has worked on it the most if you so choose.
+authors: [Protonull]

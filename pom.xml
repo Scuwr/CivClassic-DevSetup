@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xmlns="http://maven.apache.org/POM/4.0.0"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--
+	Group IDs uniquely identify your project across all projects and should follow Java's package name rules and be
+	a reversed ordered version of a domain that you control, eg: org.apache.maven
+
+	Java's package name rules: https://docs.oracle.com/javase/specs/jls/se6/html/packages.html#7.7
+
+	We recommend that you keep the groupId lower case.
+	-->
+	<groupId>io.protonull</groupId>
+
+	<!--
+	Artifact IDs represent the name of the resulting jar without the version. It's recommended to leave this as
+	lower case and to use <name> for the prettier version.
+	-->
+	<artifactId>template</artifactId>
+
+	<!--
+	The name is essentially the nice name version of artifactId.
+	-->
+	<name>Template</name>
+
+	<!--
+	The version is used for distribution. You should increment this if and when you make changes to your plugin.
+	It should generally conform to the semver versioning format, though this isn't required.
+
+	The standard semver format you'll use 99% of the time is: MAJOR.MINOR.PATCH
+
+	Increments to MAJOR should be kept to refactors and other huge or breaking changes.
+
+	Increments to MINOR should represent API updates and additions such that you might need to update the dependency
+	version for some stuff but only for those that wish to use the new features. Refrain from removing stuff in minor
+	versions, instead deprecate them and provide an alternative. Removals should generally be kept to major versions.
+
+	Increments to PATCH should represent internal changes, bug fixes, javadoc updates, reformats. If something changes
+	the nature of an API or adds a new feature, it should be a minor version instead.
+
+	Read More: https://semver.org/
+	-->
+	<version>0.0.1</version>
+
+	<properties>
+		<!--
+		We recommend using Java 8.
+
+		AdoptOpenJDK: https://adoptopenjdk.net/
+		Oracle: https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
+		-->
+		<java.compile.version>1.8</java.compile.version>
+		<!--
+		Keep the encoding at UTF-8, it's the encoding that Minecraft uses and you'll run into issues if you change this.
+		-->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+	<build>
+		<defaultGoal>clean package source:jar</defaultGoal>
+		<resources>
+			<resource>
+				<directory>${basedir}</directory>
+				<includes>
+					<include>license.txt</include>
+					<include>README.md</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- https://maven.apache.org/plugins/maven-compiler-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.compile.version}</source>
+					<target>${java.compile.version}</target>
+				</configuration>
+			</plugin>
+			<!--
+			https://maven.apache.org/surefire/maven-surefire-plugin/
+			Using the 2.22.x version until the 3x version settles.
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<Built-By>Maven</Built-By>
+									</manifestEntries>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-source-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<source>8</source>
+				</configuration>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<configLocation>https://raw.githubusercontent.com/CivClassic/style-guide/master/src/main/resources/civclassic_checks.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+				</configuration>
+				<executions>
+					<execution>
+						<id>checkstyle</id>
+						<goals>
+							<goal>checkstyle</goal>
+						</goals>
+						<phase>prepare-package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<!-- https://maven.apache.org/jxr/maven-jxr-plugin/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<!--
+	Here is where you should put your dependencies. Dependencies that will already exist on the server, such as Spigot
+	and such should have a provided scope, which will exclude it from being included in the resulting jar file for this
+	plugins, which is a good thing.
+
+	If you want to update spigot's version to the latest for its respective version, go to:
+	https://hub.spigotmc.org/nexus/content/repositories/snapshots/org/spigotmc/spigot-api/
+	and pick the most appropriate version for the setup you have.
+	-->
+	<dependencies>
+		<!-- Hard Dependencies -->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot</artifactId>
+			<version>1.14.4-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>vg.civcraft.mc.civmodcore</groupId>
+			<artifactId>CivModCore</artifactId>
+			<version>1.7.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Soft Dependencies -->
+		<!-- Test Dependencies -->
+	</dependencies>
+
+	<!--
+	Here is where you put the repositories for your dependencies. Dependencies from or hosted through Maven
+	do not need a repository.
+	-->
+	<repositories>
+		<repository>
+			<id>devoted-repo</id>
+			<url>https://build.devotedmc.com/plugin/repository/everything/</url>
+		</repository>
+		<repository>
+			<id>spigotmc-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+</project>
